@@ -14,11 +14,18 @@ canvas.height = 800;
 ctx.fillStyle = "#202020"
 ctx.fillRect(0,0,canvas.width, canvas.height);
 
-const COLS = 32;
-const ROWS = COLS;
+let COLS = 32;
+let ROWS = COLS;
 
-const CELL_HEIGHT = canvas.height / ROWS
-const CELL_WIDTH =  canvas.width / COLS
+let CELL_HEIGHT: number = canvas.height / ROWS
+let CELL_WIDTH: number  =  canvas.width / COLS
+
+function initCells() {
+    CELL_HEIGHT =  canvas!.height / ROWS
+    CELL_WIDTH  =  canvas!.width / COLS
+}
+
+initCells();
 
 let playing = false;
 
@@ -52,10 +59,14 @@ canvas.addEventListener("click", (e) => {
     drawGrid();
 })
 
+const gridSlider = document.getElementById("grid") as HTMLInputElement;
 const playButton = document.getElementById("play") as HTMLButtonElement;
 const pauseButton = document.getElementById("pause") as HTMLButtonElement;
 const resetButton = document.getElementById("reset") as HTMLButtonElement;
 
+if (gridSlider === null) {
+    throw new Error("Grid slider is missing");
+}
 if (playButton === null) {
     throw new Error("Play button is missing");
 }
@@ -64,6 +75,15 @@ if (pauseButton === null) {
 }
 if (resetButton === null) {
     throw new Error("Reset button is missing");
+}
+
+gridSlider.onchange = function() {
+    let gridValue = parseInt(gridSlider.value);
+    COLS = gridValue;
+    ROWS = gridValue;
+    initCells();
+    initGrid();
+    drawGrid();
 }
 
 pauseButton.disabled = true;
