@@ -4,7 +4,8 @@
   "description": "Cellular automata",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "cd node_modules/.bin && tsc --watch"
   },
   "author": "",
   "license": "MIT",

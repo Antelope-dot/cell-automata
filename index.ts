@@ -20,15 +20,23 @@ const ROWS = COLS;
 const CELL_HEIGHT = canvas.height / ROWS
 const CELL_WIDTH =  canvas.width / COLS
 
+let playing = false;
+
 type State = 1 | 0;
 let grid: Array<Array<State>> = [];
-for (let row = 0; row < ROWS; ++row) {
-    let r: Array<State> = []
-    for (let col = 0; col < COLS; ++col) {
-        r.push(0);
+
+function initGrid() {
+    grid = [];
+    for (let row = 0; row < ROWS; ++row) {
+        let r: Array<State> = []
+        for (let col = 0; col < COLS; ++col) {
+            r.push(0);
+        }
+        grid.push(r);
     }
-    grid.push(r);
 }
+
+initGrid();
 
 console.log(grid);
 
@@ -44,14 +52,57 @@ canvas.addEventListener("click", (e) => {
     drawGrid();
 })
 
-const playButton = document.getElementById("play");
+const playButton = document.getElementById("play") as HTMLButtonElement;
+const pauseButton = document.getElementById("pause") as HTMLButtonElement;
+const resetButton = document.getElementById("reset") as HTMLButtonElement;
+
 if (playButton === null) {
     throw new Error("Play button is missing");
 }
+if (pauseButton === null) {
+    throw new Error("Pause button is missing");
+}
+if (resetButton === null) {
+    throw new Error("Reset button is missing");
+}
+
+pauseButton.disabled = true;
 
 playButton.addEventListener("click", (e) => {
-        simulate();
+    playing = true;
+    toggleDisabled();
+    simulateLoop();
 })
+
+pauseButton.addEventListener("click", (e) => {
+    playing = false;
+    toggleDisabled();
+})
+
+resetButton.addEventListener("click", (e) => {
+    initGrid();
+    drawGrid();
+})
+
+function toggleDisabled() {
+    let isPlayDisabled = playButton.disabled as boolean
+    if (isPlayDisabled) {
+        playButton.disabled = false;
+        pauseButton.disabled = true;
+    } else {
+        playButton.disabled = true;
+        pauseButton.disabled = false;
+    }
+}
+
+function simulateLoop() {
+    if (playing) {
+        setTimeout(function () {
+            simulate();
+            simulateLoop();
+        }, 100)
+    }
+}
 
 function simulate() {
    let tempBoard: Array<Array<State>> = []; 
