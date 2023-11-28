@@ -11,10 +11,19 @@ canvas.width = 800;
 canvas.height = 800;
 ctx.fillStyle = "#202020";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
-let COLS = 32;
+const gridSlider = document.getElementById("grid");
+if (gridSlider === null) {
+    throw new Error("Grid slider is missing");
+}
+let COLS = parseInt(gridSlider.value);
 let ROWS = COLS;
 let CELL_HEIGHT = canvas.height / ROWS;
 let CELL_WIDTH = canvas.width / COLS;
+const selectedPaintTool = document.querySelector('input[name="paint"]:checked');
+if (selectedPaintTool == null) {
+    throw new Error("No paint tool selected");
+}
+let paint = selectedPaintTool.value;
 function initCells() {
     CELL_HEIGHT = canvas.height / ROWS;
     CELL_WIDTH = canvas.width / COLS;
@@ -34,24 +43,22 @@ function initGrid() {
 }
 initGrid();
 console.log(grid);
-canvas.addEventListener("click", (e) => {
-    const row = Math.floor(e.offsetX / CELL_WIDTH);
-    const col = Math.floor(e.offsetY / CELL_HEIGHT);
-    if (stateAt(row, col) === 1) {
-        grid[row][col] = 0;
+canvas.addEventListener("mousemove", (e) => {
+    if (e.buttons == 1) {
+        const row = Math.floor(e.offsetX / CELL_WIDTH);
+        const col = Math.floor(e.offsetY / CELL_HEIGHT);
+        if (paint == "draw") {
+            grid[row][col] = 1;
+        }
+        else {
+            grid[row][col] = 0;
+        }
+        drawGrid();
     }
-    else {
-        grid[row][col] = 1;
-    }
-    drawGrid();
 });
-const gridSlider = document.getElementById("grid");
 const playButton = document.getElementById("play");
 const pauseButton = document.getElementById("pause");
 const resetButton = document.getElementById("reset");
-if (gridSlider === null) {
-    throw new Error("Grid slider is missing");
-}
 if (playButton === null) {
     throw new Error("Play button is missing");
 }
@@ -83,6 +90,9 @@ resetButton.addEventListener("click", (e) => {
     initGrid();
     drawGrid();
 });
+function changePaintTool(tool) {
+    paint = tool;
+}
 function toggleDisabled() {
     let isPlayDisabled = playButton.disabled;
     if (isPlayDisabled) {
@@ -110,7 +120,6 @@ function simulate() {
             let currentState = stateAt(r, c);
             let newState = currentState;
             let count = calcNeighbors(r, c);
-            console.log(count);
             switch (currentState) {
                 case 1:
                     if (count < 2 || count > 3) {

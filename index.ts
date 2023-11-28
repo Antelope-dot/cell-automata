@@ -14,11 +14,25 @@ canvas.height = 800;
 ctx.fillStyle = "#202020"
 ctx.fillRect(0,0,canvas.width, canvas.height);
 
-let COLS = 32;
+
+const gridSlider = document.getElementById("grid") as HTMLInputElement;
+if (gridSlider === null) {
+    throw new Error("Grid slider is missing");
+}
+
+let COLS = parseInt(gridSlider.value);
 let ROWS = COLS;
 
 let CELL_HEIGHT: number = canvas.height / ROWS
 let CELL_WIDTH: number  =  canvas.width / COLS
+
+const selectedPaintTool = document.querySelector('input[name="paint"]:checked') as HTMLInputElement;
+if (selectedPaintTool == null) {
+    throw new Error("No paint tool selected");
+}
+
+type Tool = "draw" | "erase";
+let paint: Tool = selectedPaintTool.value as Tool;
 
 function initCells() {
     CELL_HEIGHT =  canvas!.height / ROWS
@@ -47,26 +61,25 @@ initGrid();
 
 console.log(grid);
 
-canvas.addEventListener("click", (e) => {
-    const row = Math.floor(e.offsetX/CELL_WIDTH);
-    const col = Math.floor(e.offsetY/CELL_HEIGHT);
+canvas.addEventListener("mousemove", (e) => {
+    if(e.buttons == 1) {
+        const row = Math.floor(e.offsetX/CELL_WIDTH);
+        const col = Math.floor(e.offsetY/CELL_HEIGHT);
 
-    if (stateAt(row,col) === 1) {
-        grid[row][col] = 0;
-    } else {
-        grid[row][col] = 1;
+        if (paint == "draw") {
+            grid[row][col] = 1;
+        } else {
+            grid[row][col] = 0;
+        }
+        drawGrid();
     }
-    drawGrid();
 })
 
-const gridSlider = document.getElementById("grid") as HTMLInputElement;
 const playButton = document.getElementById("play") as HTMLButtonElement;
 const pauseButton = document.getElementById("pause") as HTMLButtonElement;
 const resetButton = document.getElementById("reset") as HTMLButtonElement;
 
-if (gridSlider === null) {
-    throw new Error("Grid slider is missing");
-}
+
 if (playButton === null) {
     throw new Error("Play button is missing");
 }
@@ -104,6 +117,10 @@ resetButton.addEventListener("click", (e) => {
     drawGrid();
 })
 
+function changePaintTool(tool: Tool) {
+    paint = tool;
+}
+
 function toggleDisabled() {
     let isPlayDisabled = playButton.disabled as boolean
     if (isPlayDisabled) {
@@ -132,7 +149,6 @@ function simulate() {
             let currentState = stateAt(r,c);
             let newState = currentState;
             let count = calcNeighbors(r,c);
-            console.log(count);
             switch(currentState) {
                 case 1:
                     if ( count < 2 || count > 3) {

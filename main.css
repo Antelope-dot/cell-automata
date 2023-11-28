@@ -1,6 +1,18 @@
 h1 {
     color: #fff;
 }
+
 body {
-    background-color: black;
+    background-color: purple;
+}
+
+.column {
+    float: left;
+}
+
+/* Clear floats after the columns */
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
 }

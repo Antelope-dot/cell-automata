@@ -5,14 +5,33 @@
     </head>
     <body>
         <h1>Game of life</h1>
-        <div class="slidecontainer">
-            <input type="range" min="16" max="128" value="32" step="16" id="grid">
-        </div>
 
-        <canvas></canvas>
-        <button id="play"> Play</button>
-        <button id="pause"> Pause</button>
-        <button id="reset" > Reset</button>
-        <script src="index.js"></script>
+        <div class="container">
+            <div class="column">
+                <canvas></canvas>
+            </div>
+            <div class="column">
+                <fieldset>
+                    <legend>Select a paint tool:</legend>
+                    <div>
+                      <input type="radio" id="draw" name="paint" value="draw" checked onclick="changePaintTool(this.value)" />
+                      <label for="draw">Draw</label>
+                    </div>
+                    <div>
+                      <input type="radio" id="erase" name="paint" value="erase" onclick="changePaintTool(this.value)" />
+                      <label for="erase">Erase</label>
+                    </div>
+
+                  </fieldset>
+
+                <div class="slidecontainer">
+                    <input type="range" min="16" max="128" value="32" step="16" id="grid">
+                </div>
+                <button id="play"> Play</button>
+                <button id="pause"> Pause</button>
+                <button id="reset" > Reset</button>
+            </div>
+        </div>
     </body>
+    <script src="index.js"></script>
 </html>
