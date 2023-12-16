@@ -1,5 +1,5 @@
 # CELL-AUTOMATA
-Implementing conway's game of life
+Implementation of conway's game of life.
 
 ## RULES
 Alive cells stay alive if they have 2 or 3 neighbors. 
@@ -11,3 +11,6 @@ Dead cells turn alive if they have exactly 3 neighbors.
 npm i
 
 open index.html with favorite browser.
+
+## TODO
+Ability to add image as start
