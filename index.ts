@@ -169,6 +169,13 @@ function simulate() {
 
 function drawGrid() {
     if (ctx === null) return
+
+    // Repaint the whole background first. Painting dead cells one by one leaves
+    // faint anti-aliased edges when cell sizes aren't whole pixels (e.g. 800/48).
+    ctx.fillStyle = "rgb(32,32,32)";
+    ctx.fillRect(0, 0, canvas!.width, canvas!.height);
+
+    ctx.fillStyle = "red";
     for (let r = 0; r < ROWS; ++r) {
         for (let c = 0; c < COLS; ++c) {
 
@@ -176,11 +183,8 @@ function drawGrid() {
             let y  = c * CELL_WIDTH;
 
             if (stateAt(r,c) == 1) {
-                ctx.fillStyle = "red";
-            } else {
-                ctx.fillStyle = "rgb(32,32,32)";
+                ctx.fillRect(x,y, CELL_WIDTH, CELL_HEIGHT);
             }
-            ctx.fillRect(x,y, CELL_WIDTH, CELL_HEIGHT);
         }
     }
 }
