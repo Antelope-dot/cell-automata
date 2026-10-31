@@ -7,10 +7,6 @@ const ctx = canvas.getContext('2d');
 if (ctx === null) {
     throw new Error('Could not initialize 2d context');
 }
-canvas.width = 800;
-canvas.height = 800;
-ctx.fillStyle = "#202020";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
 const gridSlider = document.getElementById("grid");
 if (gridSlider === null) {
     throw new Error("Grid slider is missing");
@@ -28,7 +24,15 @@ function initCells() {
     CELL_HEIGHT = canvas.height / ROWS;
     CELL_WIDTH = canvas.width / COLS;
 }
-initCells();
+// CSS decides how big the canvas looks; match its pixel resolution to that
+// size (times the screen's pixel density) so it stays sharp.
+function resizeCanvas() {
+    const size = Math.floor(canvas.clientWidth * window.devicePixelRatio);
+    canvas.width = size;
+    canvas.height = size;
+    initCells();
+}
+resizeCanvas();
 let playing = false;
 let grid = [];
 function initGrid() {
@@ -42,11 +46,20 @@ function initGrid() {
     }
 }
 initGrid();
+drawGrid();
 console.log(grid);
+window.addEventListener("resize", () => {
+    resizeCanvas();
+    drawGrid();
+});
 canvas.addEventListener("mousemove", (e) => {
     if (e.buttons == 1) {
-        const row = Math.floor(e.offsetX / CELL_WIDTH);
-        const col = Math.floor(e.offsetY / CELL_HEIGHT);
+        // offsetX/offsetY are in displayed (CSS) pixels, so map them using the
+        // displayed size rather than the canvas resolution.
+        const row = Math.floor(e.offsetX / canvas.clientWidth * COLS);
+        const col = Math.floor(e.offsetY / canvas.clientHeight * ROWS);
+        if (row < 0 || row >= COLS || col < 0 || col >= ROWS)
+            return;
         if (paint == "draw") {
             grid[row][col] = 1;
         }
