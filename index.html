@@ -1,37 +1,68 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Conway's game of Life!</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="main.css" />
     </head>
     <body>
-        <h1>Game of life</h1>
+        <header>
+            <h1>Game <span>of</span> Life</h1>
+            <p class="subtitle">Paint some cells, press play, and watch them evolve.</p>
+        </header>
 
-        <div class="container">
-            <div class="column">
+        <main class="container">
+            <div class="board">
                 <canvas></canvas>
             </div>
-            <div class="column">
-                <fieldset>
-                    <legend>Select a paint tool:</legend>
-                    <div>
-                      <input type="radio" id="draw" name="paint" value="draw" checked onclick="changePaintTool(this.value)" />
-                      <label for="draw">Draw</label>
-                    </div>
-                    <div>
-                      <input type="radio" id="erase" name="paint" value="erase" onclick="changePaintTool(this.value)" />
-                      <label for="erase">Erase</label>
-                    </div>
 
-                  </fieldset>
+            <aside class="panel">
+                <section>
+                    <h2>Paint tool</h2>
+                    <fieldset class="segmented">
+                        <legend class="visually-hidden">Select a paint tool</legend>
+                        <input type="radio" id="draw" name="paint" value="draw" checked onclick="changePaintTool(this.value)" />
+                        <label for="draw">Draw</label>
+                        <input type="radio" id="erase" name="paint" value="erase" onclick="changePaintTool(this.value)" />
+                        <label for="erase">Erase</label>
+                    </fieldset>
+                </section>
 
-                <div class="slidecontainer">
-                    <input type="range" min="16" max="128" value="32" step="16" id="grid">
-                </div>
-                <button id="play"> Play</button>
-                <button id="pause"> Pause</button>
-                <button id="reset" > Reset</button>
-            </div>
-        </div>
+                <section>
+                    <h2><label for="grid">Grid size</label></h2>
+                    <div class="slidecontainer">
+                        <input type="range" min="16" max="128" value="32" step="16" id="grid">
+                        <div class="slider-scale">
+                            <span>16</span>
+                            <span>128</span>
+                        </div>
+                    </div>
+                    <p class="hint">Changing the size clears the board.</p>
+                </section>
+
+                <section>
+                    <h2>Simulation</h2>
+                    <div class="buttons">
+                        <button id="play" class="primary">▶ Play</button>
+                        <button id="pause">❚❚ Pause</button>
+                        <button id="reset" class="ghost">↺ Reset</button>
+                    </div>
+                </section>
+
+                <section class="rules">
+                    <h2>Rules</h2>
+                    <ul>
+                        <li>A live cell with <strong>2 or 3</strong> neighbors survives.</li>
+                        <li>Any other live cell dies.</li>
+                        <li>A dead cell with exactly <strong>3</strong> neighbors comes alive.</li>
+                    </ul>
+                </section>
+            </aside>
+        </main>
+        <script src="index.js"></script>
     </body>
-    <script src="index.js"></script>
 </html>
